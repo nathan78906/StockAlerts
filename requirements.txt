@@ -1,4 +1,4 @@
 requests
-sendgrid
 pymysql
 sentry-sdk
+discord.py
