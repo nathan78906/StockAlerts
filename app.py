@@ -34,7 +34,6 @@ for symbol in watchlist:
     embeds += new_news_releases
 
 cursor.close()
-now = datetime.now()
 
 if embeds:
     data = {"embeds": embeds}
@@ -52,4 +51,4 @@ if embeds:
     logger.info(discord_response.headers)
     logger.info(discord_response.text)
 else:
-    logger.info("No new alerts for: {}".format(now.strftime("%m/%d/%Y, %H:%M:%S")))
+    logger.info("No new alerts for: {}".format(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))

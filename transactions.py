@@ -52,7 +52,10 @@ def process_transactions(mydb, cursor, logger, symbol, transaction_list):
                     "name": transaction_b["Issuer Name"]
                 },
                 "title": transaction_b["Nature of transaction"],
-                "description": "{} \n [See more transactions]({})".format(transaction_b["Insider Name"], os.environ['BASE_URL'] + "api/sedi?insider=&symbol={}".format(symbol)),
+                "description": "{} - {}\n[See more transactions]({})".format(
+                    transaction_b["Insider Name"],
+                    transaction_b["Insider's Relationship to Issuer"],
+                    os.environ['BASE_URL'] + "api/sedi?symbol={}".format(symbol)),
                 "fields": price_statement,
                 "footer": {
                     "text": created_at
