@@ -46,20 +46,19 @@ def process_transactions(mydb, cursor, logger, symbol, transaction_list):
                     "inline": True})
 
             created_at = datetime.utcfromtimestamp(transaction["timestamp"]/1000).\
-                strftime('%Y-%m-%d %H:%M:%S')
+                strftime("%Y-%m-%dT%H:%M:%SZ")
             embed = {
                 "author": {
                     "name": transaction_b["Issuer Name"]
                 },
                 "title": transaction_b["Nature of transaction"],
-                "description": "{} - {}\n[See more transactions]({})".format(
+                "description": "{}\n{}\nDate of Transcation: {}\n{}[See more transactions]({})".format(
                     transaction_b["Insider Name"],
                     transaction_b["Insider's Relationship to Issuer"],
+                    transaction_b["Date of transaction"],
                     os.environ['BASE_URL'] + "api/sedi?symbol={}".format(symbol)),
                 "fields": price_statement,
-                "footer": {
-                    "text": created_at
-                }
+                "timestamp": created_at
             }
             new_transactions.append(embed)
 

@@ -23,7 +23,7 @@ def process_news_releases(mydb, cursor, logger, symbol, news_releases_list):
     for news_release in news_releases_response:
         if news_release["channel"] not in news_releases_list:
             created_at = datetime.utcfromtimestamp(news_release["created_at"]/1000).\
-                strftime('%Y-%m-%d %H:%M:%S')
+                strftime("%Y-%m-%dT%H:%M:%SZ")
             url = os.environ['BASE_URL'] + news_release["channel"]
             embed = {
                 "author": {
@@ -32,9 +32,7 @@ def process_news_releases(mydb, cursor, logger, symbol, news_releases_list):
                 "title": news_release["title"],
                 "url": url,
                 "description": url,
-                "footer": {
-                    "text": created_at
-                }
+                "timestamp": created_at
             }
             new_news_releases.append(embed)
 
