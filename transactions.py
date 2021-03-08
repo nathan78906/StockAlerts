@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime
 from requests_retry import requests_retry_session
 
@@ -24,7 +25,7 @@ def process_transactions(mydb, cursor, logger, symbol, transaction_list):
             unit_price = transaction_b["Unit price or exercise price"]
             try:
                 total = '${0:+,.2f}'.format(float(units or 0) * float(unit_price or 0))
-                total = total.rstrip('00').rstrip('.') if '.' in total else total
+                total = re.sub(r"\.00$", "", total)
             except Exception as x:
                 logger.debug("{} : {}".format(repr(x), transactions_url))
                 continue
@@ -52,7 +53,7 @@ def process_transactions(mydb, cursor, logger, symbol, transaction_list):
                     "name": transaction_b["Issuer Name"]
                 },
                 "title": transaction_b["Nature of transaction"],
-                "description": "{}\n{}\nDate of Transcation: {}\n{}[See more transactions]({})".format(
+                "description": "{}\n{}\nDate of Transcation: {}\n[See more transactions]({})".format(
                     transaction_b["Insider Name"],
                     transaction_b["Insider's Relationship to Issuer"],
                     transaction_b["Date of transaction"],
