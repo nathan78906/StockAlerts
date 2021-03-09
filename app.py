@@ -36,7 +36,7 @@ for symbol in watchlist:
 cursor.close()
 
 if embeds:
-    data = {"embeds": embeds}
+    data = {"embeds": embeds[::-1][:10]}
     try:
         discord_response = requests_retry_session().post(os.environ['DISCORD_WEBHOOK'],
                                                          json=data,
