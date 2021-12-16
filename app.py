@@ -2,9 +2,11 @@ import os
 import pymysql
 import logging
 import sentry_sdk
+import time
 from datetime import datetime
 from transactions import process_transactions
 from news_releases import process_news_releases
+from price_alerts import process_price_alerts
 from requests_retry import requests_retry_session
 
 sentry_sdk.init(dsn=os.environ['SENTRY'])
@@ -24,6 +26,11 @@ cursor.execute("call seen_transactions()")
 transaction_list = [item[0] for item in cursor]
 cursor.execute("call seen_news_releases()")
 news_releases_list = [item[0] for item in cursor]
+cursor.execute("call last_price_alerts()")
+price_alert_symbol_map = {}
+for item in cursor:
+    # symbol to date_last_price_alert map
+    price_alert_symbol_map[item[0]] = item[1]
 
 embeds = []
 
@@ -34,6 +41,11 @@ for item in watchlist:
         embeds += new_transactions
     new_news_releases = process_news_releases(mydb, cursor, logger, item["symbol"], item["sedarId"], news_releases_list)
     embeds += new_news_releases
+    new_price_alerts = process_price_alerts(mydb, cursor, logger, item["symbol"],
+        price_alert_symbol_map)
+    embeds += new_price_alerts
+    time.sleep(1)
+
 
 cursor.close()
 

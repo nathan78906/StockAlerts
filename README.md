@@ -1,5 +1,5 @@
 # StockAlerts
-- Tracks insider trading and news releases for stocks on a watchlist
+- Tracks insider trading, news releases, and major price fluctuations for stocks on a watchlist
 - Sends notifications on Discord
 
 ### Screenshot
