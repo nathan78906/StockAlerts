@@ -19,11 +19,11 @@ def process_price_alerts(mydb, cursor, logger, symbol, price_alert_symbol_map):
         logger.error("{} : {}".format(price_info_response.status_code, price_info_url))
         return []
 
-    price_info_response = price_info_response.json()["quote"]
-    percent_change = float(price_info_response["percent_change"])
+    price_info_response = price_info_response.json()
+    percent_change = float(price_info_response["quote"]["percent_change"])
     percent_change_threshold = int(os.environ['PERCENT_CHANGE_THRESHOLD'])
     date_last_price_alert = price_alert_symbol_map[symbol]
-    date_last_quote_update = datetime.utcfromtimestamp(price_info_response["timestamp"]/1000)
+    date_last_quote_update = datetime.utcfromtimestamp(price_info_response["quote"]["timestamp"]/1000)
     if (percent_change < -percent_change_threshold or percent_change > percent_change_threshold) and date_last_price_alert.date() != date_last_quote_update.date():
         created_at = date_last_quote_update.strftime("%Y-%m-%dT%H:%M:%SZ")
         embed = {
@@ -31,7 +31,7 @@ def process_price_alerts(mydb, cursor, logger, symbol, price_alert_symbol_map):
                 "name": symbol
             },
             "title": "Price alert: {}%".format(percent_change),
-            "description": "{}{}".format(os.environ['BASE_URL'], symbol),
+            "description": "{}{}".format("https://finance.yahoo.com/quote/", price_info_response["stock_info"]["symbol"]),
             "timestamp": created_at
         }
         new_price_alerts.append(embed)
