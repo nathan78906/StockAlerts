@@ -28,10 +28,10 @@ def process_price_alerts(mydb, cursor, logger, symbol, price_alert_symbol_map):
         created_at = date_last_quote_update.strftime("%Y-%m-%dT%H:%M:%SZ")
         embed = {
             "author": {
-                "name": symbol
+                "name": price_info_response["stock_info"]["company"]
             },
-            "title": "Price alert: {}%".format(percent_change),
-            "description": "{}{}".format("https://finance.yahoo.com/quote/", price_info_response["stock_info"]["symbol"]),
+            "title": "Price alert: {}% ({} {} to {})".format(percent_change, price_info_response["quote"]["direction"], price_info_response["quote"]["price_change"], price_info_response["quote"]["last_trade_price"]),
+            "description": "Realtime price: {}{}".format("https://finance.yahoo.com/quote/", price_info_response["stock_info"]["symbol"]),
             "timestamp": created_at
         }
         new_price_alerts.append(embed)
